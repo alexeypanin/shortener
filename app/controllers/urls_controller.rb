@@ -2,7 +2,7 @@ class UrlsController < ApplicationController
   before_action :find_link, only: %i[show stats]
 
   def create
-    link = ShortenedLink.new(original_url: url_param,
+    link = ShortenedLink.new(original_url: url_param[:url],
                              shortened_url: LinkGenerator.new.call)
     if link.save
       render json: { short_link: link.shortened_url }.to_json

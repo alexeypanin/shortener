@@ -11,15 +11,6 @@ class LinkGenerator
     self.link_length = calc_link_length
   end
 
-  def self.test
-    i = 0
-    loop do
-      i += 1
-      ShortenedLink.create!(original_url: "https://google.com/?a=#{i}", shortened_url: new.call)
-    end
-  end
- 
-  # генерируем новый токен для уникальной ссылки
   def call
     # таймаут на всякий случай, чтобы не улететь в бесконечность ненароком :)
     Timeout.timeout(EXECUTION_TIME_LIMIT) do
