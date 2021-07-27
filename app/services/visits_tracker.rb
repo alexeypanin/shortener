@@ -10,7 +10,7 @@ class VisitsTracker
     return if link.link_visits.where(ip: ip).exists?
 
     ActiveRecord::Base.transaction do
-      link.link_visits.create(ip: ip)
+      link.link_visits.create!(ip: ip)
       link.increment!(:transitions)
     end
   end
