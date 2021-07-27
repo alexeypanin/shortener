@@ -28,7 +28,7 @@ class LinkGenerator
     last_link = ShortenedLink.last&.shortened_url
     return MIN_LINK_LENGTH if last_link.blank?
 
-    current_length = last_link.split('/').last.size
+    current_length = last_link.size
     existed_urls = ShortenedLink.where('length(shortened_url) = :count',
                                         count: current_length).count
 
