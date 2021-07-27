@@ -14,7 +14,7 @@ class LinkGenerator
   def self.test
     i = 0
     loop do
-      i+= 1
+      i += 1
       ShortenedLink.create!(original_url: "https://google.com/?a=#{i}", shortened_url: new.call)
     end
   end
@@ -22,7 +22,7 @@ class LinkGenerator
   # генерируем новый токен для уникальной ссылки
   def call
     # таймаут на всякий случай, чтобы не улететь в бесконечность ненароком :)
-    Timeout::timeout(EXECUTION_TIME_LIMIT) do
+    Timeout.timeout(EXECUTION_TIME_LIMIT) do
       loop do
         url = generate_token
         break url unless ShortenedLink.exists?(shortened_url: url)
@@ -38,8 +38,8 @@ class LinkGenerator
     return MIN_LINK_LENGTH if last_link.blank?
 
     current_length = last_link.split('/').last.size
-    existed_urls = ShortenedLink.where("length(shortened_url) = :count",
-                                       count: current_length).count
+    existed_urls = ShortenedLink.where('length(shortened_url) = :count',
+                                        count: current_length).count
 
     # если все возможные варианты данной длины уже есть,
     # то генерируем токен на 1 символ длиннее
@@ -55,7 +55,7 @@ class LinkGenerator
   end
 
   # кол-во уникальных строк для текущей длины токена
-  def tokens_limit current_length
-    CHARSET.size ** current_length
+  def tokens_limit(current_length)
+    CHARSET.size**current_length
   end
 end

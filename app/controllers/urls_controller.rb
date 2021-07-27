@@ -1,5 +1,5 @@
 class UrlsController < ApplicationController
-  before_action :find_link, only: [:show, :stats]
+  before_action :find_link, only: %i[show stats]
 
   def create
     link = ShortenedLink.new(original_url: url_param,
@@ -11,6 +11,7 @@ class UrlsController < ApplicationController
     end
   end
 
+  # статистику считаем асинхронно, чтобы редирект был максимально быстрым
   def show
     VisitsTrackerWorker.perform_async(@link.id, request.remote_ip)
     render json: { full_link: @link.original_url }.to_json

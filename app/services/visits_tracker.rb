@@ -1,7 +1,7 @@
 class VisitsTracker
   attr_accessor :link, :ip
 
-  def initialize link_id:, ip:
+  def initialize(link_id:, ip:)
     @link = ShortenedLink.find(link_id)
     @ip = ip
   end
