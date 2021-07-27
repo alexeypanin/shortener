@@ -24,7 +24,7 @@ class UrlsController < ApplicationController
   private
 
   def find_link
-    @link = ShortenedLink.find_by(shortened_url: params[:id])
+    @link = ShortenedLink.find_by!(shortened_url: params[:id])
   end
 
   def url_param
