@@ -18,7 +18,7 @@ class UrlsController < ApplicationController
   end
 
   def stats
-    render json: { transitions: @link.transitions }.to_json
+    render json: { transitions: StatsCalculator.new(@link).call }.to_json
   end
 
   private

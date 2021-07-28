@@ -8,10 +8,20 @@ class VisitsTracker
 
   def call
     return if link.link_visits.where(ip: ip).exists?
+    return if cached_ips.include?(ip)
 
-    ActiveRecord::Base.transaction do
-      link.link_visits.create!(ip: ip)
-      link.increment!(:transitions)
-    end
+    # добавляем новый ip в кэш посещений
+    redis.hset('links', link.id, cached_ips.push(ip).to_json)
+  end
+
+  private
+
+  def redis
+    @redis ||= Redis.new
+  end
+
+  def cached_ips
+    ids = redis.hmget('links', link.id)[0]
+    ids.present? ? JSON.parse(ids) : []
   end
 end
