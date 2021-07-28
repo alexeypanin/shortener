@@ -50,16 +50,11 @@ describe UrlsController, type: :controller do
       expect(resp['full_link']).to eq(full_url)
     end
 
-    it 'should save url visits' do
-      expect(another_link.transitions).to eq(0)
-      get :show, params: { id: another_link.shortened_url }
-      expect(another_link.reload.transitions).to eq(1)
-    end
-
     it 'should save visit ips and keep it uniq' do
       expect(third_link.transitions).to eq(0)
 
       3.times { get(:show, params: { id: third_link.shortened_url }) }
+      VisitsUpdater.call
 
       expect(third_link.reload.link_visits.count).to eq(1)
     end
@@ -72,6 +67,7 @@ describe UrlsController, type: :controller do
     it 'should show show link stats' do
       # делаем 1 посещение
       get(:show, params: { id: link.shortened_url })
+
       # запрашиваем статистику
       get(:stats, params: { id: link.shortened_url })
 
